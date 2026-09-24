@@ -1,0 +1,252 @@
+:root {
+  --paper: #f6f1e4;
+  --ink: #1c1a17;
+  --ink-soft: #4a453e;
+  --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='10' viewBox='0 0 40 10'%3E%3Cpath d='M0 5 Q10 -2 20 5 T40 5' fill='none' stroke='%231c1a17' stroke-width='2'/%3E%3C/svg%3E");
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Kalam', cursive;
+}
+
+/* subtle paper grain */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
+  background-size: 5px 5px;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.paper {
+  position: relative;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 3rem;
+  border-left: 3px solid var(--ink);
+  border-right: 3px solid var(--ink);
+  min-height: 100vh;
+}
+
+/* ---------- rotations for hand-drawn feel ---------- */
+.rot-a { transform: rotate(-1.2deg); display: inline-block; }
+.rot-b { transform: rotate(0.9deg); display: inline-block; }
+.rot-c { transform: rotate(-0.5deg); display: inline-block; }
+
+/* ---------- hero ---------- */
+.hero {
+  text-align: center;
+  padding-bottom: 1rem;
+}
+
+.eyebrow {
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  margin-bottom: 0.5rem;
+}
+
+.big-title {
+  font-family: 'Permanent Marker', cursive;
+  font-size: clamp(2.8rem, 9vw, 5rem);
+  line-height: 1.05;
+  margin: 0.2rem 0;
+}
+
+.tagline {
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  margin: 0.75rem 0 1.75rem;
+}
+
+.menu-nav {
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+}
+
+.menu-nav a {
+  color: var(--ink);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.menu-nav a:hover {
+  border-bottom-color: var(--ink);
+  transform: rotate(0deg) !important;
+}
+
+.menu-nav .dot {
+  margin: 0 0.6rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- dividers ---------- */
+.divider {
+  height: 10px;
+  background-image: var(--wave);
+  background-repeat: repeat-x;
+  background-size: 40px 10px;
+  margin: 2.5rem 0;
+  opacity: 0.9;
+}
+
+.counter-line {
+  height: 3px;
+  background: var(--ink);
+  margin-top: 3rem;
+}
+
+/* ---------- sections ---------- */
+.course {
+  padding: 0 0.25rem;
+}
+
+.course-title {
+  font-family: 'Permanent Marker', cursive;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  margin: 0 0 1rem;
+}
+
+.section-note {
+  font-style: italic;
+  color: var(--ink-soft);
+  margin-bottom: 1.5rem;
+}
+
+.bio {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  max-width: 60ch;
+}
+
+/* ---------- interest / project grid ---------- */
+.interest-grid,
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.75rem 2rem;
+}
+
+.interest-card h3,
+.project-card h3 {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 1.15rem;
+  line-height: 1.3;
+  margin: 0 0 0.5rem;
+}
+
+.interest-card .price {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.interest-card ul,
+.project-card ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.interest-card li,
+.project-card li {
+  margin-bottom: 0.3rem;
+  line-height: 1.4;
+}
+
+.project-tag {
+  font-style: italic;
+  color: var(--ink-soft);
+  margin: 0 0 0.5rem;
+}
+
+.view-link {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 2px solid var(--ink);
+}
+
+.view-link:hover {
+  color: var(--ink-soft);
+}
+
+/* ---------- contact ---------- */
+.contact-list {
+  list-style: none;
+  padding: 0;
+  font-size: 1.15rem;
+  line-height: 2;
+}
+
+.contact-list span {
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.contact-list a {
+  color: var(--ink);
+}
+
+.etiquette {
+  margin-top: 1.5rem;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+/* ---------- footer / table doodles ---------- */
+.table {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3rem;
+  padding: 2.5rem 0 1rem;
+  flex-wrap: wrap;
+}
+
+.doodle {
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.85;
+}
+
+.doodle.vase { width: 70px; height: auto; }
+.doodle.bottle { width: 40px; height: auto; transform: rotate(-3deg); }
+.doodle.cup { width: 55px; height: auto; transform: rotate(2deg); }
+
+.copyright {
+  width: 100%;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin-top: 1rem;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 600px) {
+  .rot-a, .rot-b, .rot-c { transform: none; }
+  .menu-nav .dot { margin: 0 0.4rem; }
+  .table { gap: 1.5rem; }
+}

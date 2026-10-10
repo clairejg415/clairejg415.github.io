@@ -139,8 +139,11 @@ body.inner {
   width: 3.2rem;
   height: 8px;
   margin-right: 0.8rem;
-  background: var(--red);
+  background: var(--fg);
 }
+
+/* red is the accent: professional work, and the About page's Likes */
+.section-label.accent b { background: var(--red); }
 
 .credits + .prose,
 .billing + .colophon { margin-top: 3rem; }

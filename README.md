@@ -8,18 +8,13 @@ Live at: https://clairejg415.github.io
 
 ## The scene
 
-Four things in the drawing are clickable:
-
-| Object | Opens |
-| --- | --- |
-| The empty stool nearest you | About me |
-| The bottles on the backbar | Things I'm into |
-| The TV over the bar | Projects |
-| The coupe on the bar | Say hello |
+The drawing itself isn't clickable; navigation is the menu (About, Projects,
+Writing, Say hello), which opens a panel for each. The Things I'm into panel is
+still in `index.html` but nothing opens it.
 
 The page is laid out as one poster built on the diagonal of the bar: the scene
-runs off the top and right edges, and the menu (About, Projects, Writing, Say
-hello) sits on the open floor as torn-paper tags stepping down parallel to the
+runs off the top and right edges, and the menu sits on the open floor in big hand-cut capitals stepping down
+parallel to the
 stools. On wide screens (wider than 17:10) the menu instead moves into the
 empty strip left of the picture, right-aligned and locked to the window's top
 and bottom, leaving the floor open. On screens under 760px wide the menu moves below the picture so it
@@ -28,12 +23,7 @@ stays readable.
 Accessibility: the menu is a list of real buttons (44px minimum height, cream
 on black, visible focus ring). Panels are modal dialogs: focus moves into the
 panel, the rest of the page is made inert, Escape closes, and focus returns to
-the menu. The picture's own hotspots that repeat menu items are mouse-only;
-the bottles stay keyboard-reachable because Things I'm into lives only there.
-All animation stops under prefers-reduced-motion.
-
-The clickable areas are the `.hotspot` groups at the end of the `<svg>` in
-`index.html`, drawn on top of the picture.
+the menu. All animation stops under prefers-reduced-motion.
 
 ## How the drawing is made
 

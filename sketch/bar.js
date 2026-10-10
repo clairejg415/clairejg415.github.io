@@ -138,27 +138,42 @@ function buildScene(v){
     const BW=-1.3,clear=2.18,hs=[.3,.26,.33,.24,.28,.31,.25,.29];
     [1.48,1.9].forEach((h,j)=>{face(-1,clear,BW,h-.035,h,'shelf');
       let i=j*3;for(let q=-.9;q<clear-.1;q+=.17){if(j===1&&q>.15&&q<1.6)continue;const [bx,by]=P(q,BW,h),sc=ppm(q,BW);
-        const gap=j===0&&q>.45&&q<1.2; // a clear patch of wall where the bartender stands
+        const gap=j===0&&q>.45&&q<1.7; // a clear patch of wall where the bartender stands
         bottle(bx,by,hs[i++%8]*sc,gap?'gapBottle':'backBottle',gap?'gapBottle':'backLabel',Math.max(1.6,.04*sc))}});
     face(.3,1.5,BW+.01,1.98,2.38,'tv');face(.36,1.44,BW+.02,2.02,2.34,'tvScreen');
     poly([P(.9,BW+.03,2.05),P(1.15,BW+.03,2.17),P(.9,BW+.03,2.29),P(.65,BW+.03,2.17)],'tvField');
     // the bartender: local units are centimetres, origin at his waist where the bar cuts him off.
-    // He is a small rig (gait > head, arms > upper arm > forearm) posed by keyframes generated
-    // below: he walks in with a stepping bob, lifts a shaker from under the bar, shakes it in
-    // three bursts, pours toward the coupe, sets it down, nods to the couple and walks out.
-    const BT=-.95,btAt=q=>{const [X,Y]=P(q,BT,BAR);return `translate(${X.toFixed(1)}px,${Y.toFixed(1)}px) scale(${(ppm(q,BT)/100*1.2).toFixed(3)})`};
+    // He is a small rig (gait > head, arms > upper arm > forearm > wrist) posed by keyframes
+    // generated below: he walks in with a stepping bob, lifts a shaker from under the bar,
+    // shakes it in three bursts, pours into the coupe, sets it down, nods and walks out.
+    const BT=-.95,btK=q=>ppm(q,BT)/100*1.2,btAt=q=>{const [X,Y]=P(q,BT,BAR);return `translate(${X.toFixed(1)}px,${Y.toFixed(1)}px) scale(${btK(q).toFixed(3)})`};
     const L1=17,L2=20,ang=([x,y])=>Math.atan2(y,x)*180/Math.PI,sub=(p,q)=>[p[0]-q[0],p[1]-q[1]];
     const norm=d=>((d+540)%360)-180;
     const ik=(sh,hand,out)=>{ // two-bone IK: elbow bent outward (out = +1 right, -1 left)
       const d=sub(hand,sh),L=Math.min(Math.hypot(...d),L1+L2-.01),a=Math.atan2(d[1],d[0]);
       const c=Math.acos((L1*L1+L*L-L2*L2)/(2*L1*L)),t=a-out*c;
       return [sh[0]+L1*Math.cos(t),sh[1]+L1*Math.sin(t)]};
-    const arm=(sh,restHand,upHand,out)=>{const er=ik(sh,restHand,out),eu=ik(sh,upHand,out);
-      const au=norm(ang(sub(eu,sh))-ang(sub(er,sh))),af=norm(ang(sub(upHand,eu))-ang(sub(restHand,er))-au);
-      return {sh,er,rh:[er[0]+L2*Math.cos(Math.atan2(restHand[1]-er[1],restHand[0]-er[0])),er[1]+L2*Math.sin(Math.atan2(restHand[1]-er[1],restHand[0]-er[0]))],au,af}};
-    const R_=arm([20,-30],[13,4],[13,-45],1),L_=arm([-20,-30],[-13,4],[3,-33],-1);
-    // the shaker is drawn where it sits at rest (in the right hand, below the bar) so the rig carries it up
-    const toRest=pts=>rotPts(rotPts(pts,R_.sh[0],R_.sh[1],-R_.au),R_.er[0],R_.er[1],-R_.af);
+    // a pose is the rotation of the upper arm and forearm away from the resting arm
+    const pose=(sh,restHand,hand,out)=>{const er=ik(sh,restHand,out),e=ik(sh,hand,out);
+      const au=norm(ang(sub(e,sh))-ang(sub(er,sh)));return {au,af:norm(ang(sub(hand,e))-ang(sub(restHand,er))-au),er}};
+    // the shaker hand is the one nearer the coupe (screen left); the other steadies the shaker
+    const S_SH=[-20,-30],S_REST=[-13,4],S_UP=[-13,-45],T_SH=[20,-30],T_REST=[13,4],T_UP=[-3,-33];
+    const sUp=pose(S_SH,S_REST,S_UP,-1),tUp=pose(T_SH,T_REST,T_UP,1),sEr=sUp.er,tEr=tUp.er;
+    const restHand=(sh,er,h)=>{const a=Math.atan2(h[1]-er[1],h[0]-er[0]);return [er[0]+L2*Math.cos(a),er[1]+L2*Math.sin(a)]};
+    const sRh=restHand(S_SH,sEr,S_REST),tRh=restHand(T_SH,tEr,T_REST);
+    // the shaker as it is held up by his head: base low, cap (the mouth) high
+    const SHK=[[-2,-29],[-10,-31],[-18,-59],[-9,-61]],SHK_IN=[[-3,-30.5],[-9,-32],[-16,-57.5],[-10,-59]],CAP=[[-10,-59],[-17,-57],[-17.5,-63],[-12,-64.5]];
+    const MOUTH_UP=[-14.5,-63.5],TILT=-112;  // pouring = the shaker turned 112deg from upright, mouth down and out
+    // where he must stand, and where his hand must be, for the mouth to sit just above the coupe
+    const [cx,cy]=P(.98,-.22,BAR),rimY=cy-.225*ppm(.98,-.22),hm=rotPts([sub(MOUTH_UP,S_UP)],0,0,TILT)[0];
+    const POUR_REACH=-34; // hand x in local units when pouring
+    let lo=.3,hi=2;for(let i=0;i<40;i++){const m=(lo+hi)/2;(P(m,BT,BAR)[0]+btK(m)*(POUR_REACH+hm[0])>cx)?lo=m:hi=m}
+    const STAND=(lo+hi)/2,[,sy]=P(STAND,BT,BAR),k=btK(STAND);
+    const S_POUR=[POUR_REACH,(rimY-7-sy)/k-hm[1]];
+    const sPour=pose(S_SH,S_REST,S_POUR,-1);
+    const wPour=norm(sUp.au+sUp.af+TILT-sPour.au-sPour.af);
+    // drawn at rest (hand under the bar), so map the held-up shaker back into the resting arm
+    const toRest=pts=>rotPts(rotPts(pts,S_SH[0],S_SH[1],-sUp.au),sEr[0],sEr[1],-sUp.af);
     S.push({t:'open',cls:'bartender',style:`transform:${btAt(-1.6)}`});
     S.push({t:'open',cls:'bt-gait',pivot:[0,4]});
     poly(spline([[-17,4],[17,4],[19,-20],[21,-31],[13,-35],[5,-36],[-5,-36],[-13,-35],[-21,-31],[-19,-20]]),'btJacket');
@@ -166,24 +181,22 @@ function buildScene(v){
     S.push({t:'open',cls:'bt-head',pivot:[0,-38]});
     poly(rect(-3.5,-41,3.5,-35),'btBlack');poly(ellPts(0,-47,9,11,30),'btBlack');
     S.push({t:'close'});
-    S.push({t:'open',cls:'bt-arms',pivot:[8,-38]});
-    for(const [A,k] of [[L_,'l'],[R_,'r']]){
-      S.push({t:'open',cls:'bt-u'+k,pivot:A.sh});line(A.sh,A.er,8,'btJacket');
-      S.push({t:'open',cls:'bt-f'+k,pivot:A.er});line(A.er,A.rh,7,'btJacket');
-      if(k==='r'){S.push({t:'open',cls:'bt-shk',style:'opacity:0'});poly(toRest([[-1,-29],[10.5,-26.5],[18,-58],[8,-61]]),'btBlack');poly(toRest([[1,-31],[9,-29],[16,-57],[9,-59]]),'btShaker');
-        poly(toRest([[9,-59],[16,-57],[16.5,-63],[11,-64.5]]),'btBlack');S.push({t:'close'})}
-      ell(A.rh[0],A.rh[1],3.4,3.4,'btBlack');
+    S.push({t:'open',cls:'bt-arms',pivot:[-8,-38]});
+    for(const [sh,er,rh,kk] of [[T_SH,tEr,tRh,'t'],[S_SH,sEr,sRh,'s']]){
+      S.push({t:'open',cls:'bt-u'+kk,pivot:sh});line(sh,er,8,'btJacket');
+      S.push({t:'open',cls:'bt-f'+kk,pivot:er});line(er,rh,7,'btJacket');
+      if(kk==='s'){S.push({t:'open',cls:'bt-w',pivot:rh},{t:'open',cls:'bt-shk',style:'opacity:0'});
+        poly(toRest(SHK),'btBlack');poly(toRest(SHK_IN),'btShaker');poly(toRest(CAP),'btBlack');S.push({t:'close'},{t:'close'})}
+      ell(rh[0],rh[1],3.4,3.4,'btBlack');
       S.push({t:'close'},{t:'close'})}
     S.push({t:'close'},{t:'close'},{t:'close'});
 
     // ---- choreography: one 60s cycle, percentages of it; 1s = 1.667% ----
     const kf=(name,frames)=>`@keyframes ${name}{${frames.map(([p,tr,ease])=>`${(+p).toFixed(2)}%{transform:${tr}${ease?`;animation-timing-function:${ease}`:''}}`).join('')}}`;
-    const css=[];
-    // path along the bar: ease in from offstage, ease out to a stop, and the reverse on the way out
-    css.push(kf('bt-walk',[[0,btAt(-1.6)],[61,btAt(-1.6),'cubic-bezier(.4,0,1,1)'],[63,btAt(-.9),'linear'],[66.5,btAt(.25),'cubic-bezier(0,0,.3,1)'],
-      [68.5,btAt(.6)],[86,btAt(.6),'cubic-bezier(.5,0,1,1)'],[88,btAt(.25),'linear'],[91.5,btAt(-.9),'cubic-bezier(0,0,.6,1)'],[93.5,btAt(-1.6)],[100,btAt(-1.6)]]));
-    // gait: a bob and side-sway every step, leaning into the direction of travel; a dip as he
-    // reaches under the bar; a small jiggle while he shakes
+    const css=[],r=v=>`rotate(${(+v).toFixed(1)}deg)`;
+    const mid=(STAND+(-.9))/2;
+    css.push(kf('bt-walk',[[0,btAt(-1.6)],[61,btAt(-1.6),'cubic-bezier(.4,0,1,1)'],[63,btAt(-.9),'linear'],[66.5,btAt(mid+.3),'cubic-bezier(0,0,.3,1)'],
+      [68.5,btAt(STAND)],[86,btAt(STAND),'cubic-bezier(.5,0,1,1)'],[88,btAt(mid+.3),'linear'],[91.5,btAt(-.9),'cubic-bezier(0,0,.6,1)'],[93.5,btAt(-1.6)],[100,btAt(-1.6)]]));
     const gait=[[0,'none'],[60.9,'none']],step=.8;
     const walkSteps=(p0,p1,lean)=>{let i=0;for(let p=p0;p<p1-.01;p+=step/2,i++){
       const strike=i%2===0,side=(Math.floor(i/2)%2?1:-1);
@@ -193,26 +206,26 @@ function buildScene(v){
     gait.push([69,'translateY(2.2px) rotate(0deg)','ease-in-out'],[69.8,'translateY(0) rotate(0deg)']);
     const shakeWin=[[71.2,74.2],[74.9,77.9],[78.4,79.6]];
     for(const [a0,a1] of shakeWin){for(let p=a0;p<a1;p+=.333)gait.push([p,'translateY(.7px) rotate(0deg)','ease-in-out'],[p+.166,'translateY(-.5px) rotate(0deg)','ease-in-out']);gait.push([a1,'translateY(0) rotate(0deg)'])}
+    gait.push([80.2,'translateY(0) rotate(0deg)','ease-in-out'],[81,'translateY(0) rotate(-3deg)'],[82.5,'translateY(0) rotate(-3deg)','ease-in-out'],[83.2,'translateY(0) rotate(0deg)']);
     gait.push([85.9,'none']);walkSteps(86,93.5,2.2);gait.push([100,'none']);
     css.push(kf('bt-gait',gait));
-    // shake: quick vertical strokes with a twist, in three bursts
     const sh=[[0,'none'],[71.1,'none']];
-    for(const [a0,a1] of shakeWin){for(let p=a0;p<a1;p+=.333)sh.push([p,'translateY(3.2px) rotate(5deg)','ease-in-out'],[p+.166,'translateY(-3.4px) rotate(-5deg)','ease-in-out']);sh.push([a1,'none'])}
+    for(const [a0,a1] of shakeWin){for(let p=a0;p<a1;p+=.333)sh.push([p,'translateY(3.2px) rotate(-5deg)','ease-in-out'],[p+.166,'translateY(-3.4px) rotate(5deg)','ease-in-out']);sh.push([a1,'none'])}
     sh.push([100,'none']);css.push(kf('bt-arms',sh));
-    // arms: rest -> lift (with a touch of overshoot) -> pour (right forearm tips toward the coupe) -> back down
+    // arms: rest -> lift (a touch of overshoot) -> the shaker hand reaches out and tips over the coupe while
+    // the other hand lets go and rests on the bar -> back up -> down
     const up='cubic-bezier(.25,.9,.35,1.15)',io='cubic-bezier(.45,0,.55,1)';
-    for(const [A,k] of [[L_,'l'],[R_,'r']]){
-      const pourF=k==='r'?A.af-62:A.af*.55;
-      css.push(kf('bt-u'+k,[[0,'rotate(0deg)'],[69.6,'rotate(0deg)',up],[71,`rotate(${A.au.toFixed(1)}deg)`],[83.2,`rotate(${A.au.toFixed(1)}deg)`,io],[84.4,'rotate(0deg)'],[100,'rotate(0deg)']]));
-      css.push(kf('bt-f'+k,[[0,'rotate(0deg)'],[69.6,'rotate(0deg)',up],[71,`rotate(${A.af.toFixed(1)}deg)`],[80,`rotate(${A.af.toFixed(1)}deg)`,io],
-        [81,`rotate(${pourF.toFixed(1)}deg)`],[82.4,`rotate(${pourF.toFixed(1)}deg)`,io],[83.2,`rotate(${A.af.toFixed(1)}deg)`,io],[84.4,'rotate(0deg)'],[100,'rotate(0deg)']]))}
+    css.push(kf('bt-us',[[0,r(0)],[69.6,r(0),up],[71,r(sUp.au)],[80,r(sUp.au),io],[81,r(sPour.au)],[82.5,r(sPour.au),io],[83.2,r(sUp.au),io],[84.4,r(0)],[100,r(0)]]));
+    css.push(kf('bt-fs',[[0,r(0)],[69.6,r(0),up],[71,r(sUp.af)],[80,r(sUp.af),io],[81,r(sPour.af)],[82.5,r(sPour.af),io],[83.2,r(sUp.af),io],[84.4,r(0)],[100,r(0)]]));
+    css.push(kf('bt-w',[[0,r(0)],[80.2,r(0),io],[81.2,r(wPour)],[82.5,r(wPour),io],[83.2,r(0)],[100,r(0)]]));
+    css.push(kf('bt-ut',[[0,r(0)],[69.6,r(0),up],[71,r(tUp.au)],[79.8,r(tUp.au),io],[80.8,r(0)],[83.2,r(0),io],[84,r(tUp.au*.2)],[84.4,r(0)],[100,r(0)]]));
+    css.push(kf('bt-ft',[[0,r(0)],[69.6,r(0),up],[71,r(tUp.af)],[79.8,r(tUp.af),io],[80.8,r(0)],[100,r(0)]]));
     // head: watches the pour, then a nod to the couple before he leaves
-    css.push(kf('bt-head',[[0,'none'],[79.8,'none',io],[80.8,'rotate(-7deg)'],[82.6,'rotate(-7deg)',io],[83.4,'none'],[84.4,'none',io],
+    css.push(kf('bt-head',[[0,'none'],[79.8,'none',io],[80.8,'rotate(-9deg) translateY(1px)'],[82.6,'rotate(-9deg) translateY(1px)',io],[83.4,'none'],[84.4,'none',io],
       [84.9,'translateY(2px) rotate(-4deg)',io],[85.5,'none'],[100,'none']]));
-    // the shaker only exists once it comes up from under the bar
     css.push(`@keyframes bt-shk{0%,69.7%{opacity:0}69.8%,84.1%{opacity:1}84.2%,100%{opacity:0}}`);
-    const run=n=>`.${n}{animation:${n==='bartender'?'bt-walk':n} 60s linear -29s infinite}`;
-    S.push({t:'style',css:css.join('')+`@media (prefers-reduced-motion:no-preference){${['bartender','bt-gait','bt-head','bt-arms','bt-ul','bt-fl','bt-ur','bt-fr','bt-shk'].map(run).join('')}}`});
+    const run=n=>`.${n}{animation:${n==='bartender'?'bt-walk':n} 60s linear -33.6s infinite}`;
+    S.push({t:'style',css:css.join('')+`@media (prefers-reduced-motion:no-preference){${['bartender','bt-gait','bt-head','bt-arms','bt-us','bt-fs','bt-w','bt-ut','bt-ft','bt-shk'].map(run).join('')}}`});
     // canopy over the bar
     face(-1.5,8.2,.25,2.45,3.4,'soffit');
     poly([P(-1.5,.25,2.45),P(8.2,.25,2.45),P(8.2,BW,2.45),P(-1.5,BW,2.45)],'soffit');

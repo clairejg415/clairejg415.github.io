@@ -184,53 +184,6 @@ body {
 
 .menu-item:focus:not(:focus-visible) { outline: none; }
 
-.hotspot {
-  cursor: pointer;
-  outline: none;
-}
-
-.hotspot .hit {
-  fill: transparent;
-  stroke: none;
-}
-
-.hotspot:focus-visible .hit {
-  stroke: var(--red);
-  stroke-width: 2;
-  stroke-dasharray: 5 4;
-}
-
-/* red paper tags, Bass-style; shown on hover or keyboard focus */
-.hotspot .tag {
-  opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  pointer-events: none;
-}
-
-.hotspot .tag rect {
-  fill: var(--red);
-}
-
-.hotspot .tag text {
-  font-family: var(--sans);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  fill: var(--bg);
-}
-
-.hotspot:hover .tag,
-.hotspot:focus-visible .tag {
-  opacity: 1;
-  transform: none;
-}
-
-/* touch screens can't hover; the menu covers the other panels, so only the
-   bottles (reachable nowhere else) keep a visible label there */
-@media (hover: none) {
-  .hotspot[data-href="interests.html"] .tag { opacity: 1; transform: none; }
-}
-
 /* phones and narrow windows: the floor is too small to hold readable tags,
    so the menu steps down beneath the picture instead */
 @media (max-width: 760px) {

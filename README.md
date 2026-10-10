@@ -9,8 +9,7 @@ Live at: https://clairejg415.github.io
 ## The scene
 
 The drawing itself isn't clickable; navigation is the menu (About, Projects,
-Writing, Say hello), and each item is its own page. `interests.html` still
-exists, but nothing links to it since the bottles stopped being clickable.
+Writing, Say hello), and each item is its own page.
 
 The page is laid out as one poster built on the diagonal of the bar: the scene
 runs off the top and right edges, and the menu sits on the open floor in big

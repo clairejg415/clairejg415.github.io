@@ -121,6 +121,18 @@ function buildScene(v){
       return lo.slice(0,-1).concat(up.slice(0,-1))};
     // left wall window
     [[[18,112],[146,112]],[[146,112],[146,262]],[[146,262],[18,262]],[[18,262],[18,112]],[[82,112],[82,262]],[[18,187],[146,187]]].forEach(([a,b])=>line(a,b,3,'window'));
+    // the window as cut paper: four torn panes of night with the frame left as cream gaps,
+    // a crescent moon, stars, and a red skyline with a few lit windows.
+    // ('win' roles draw from their own random stream so the rest of the picture is unchanged)
+    [[18,112,79,184],[85,112,146,184],[18,190,79,262],[85,190,146,262]].forEach(([x0,y0,x1,y1],i)=>
+      poly(rotPts(rect(x0,y0,x1,y1),(x0+x1)/2,(y0+y1)/2,[-.8,.6,.5,-.7][i]),'winPane'));
+    ell(50,141,13,13,'winMoon');ell(56.5,136.5,12,12,'winShade');
+    [[112,128,3.2],[131,146,2.4],[102,162,2],[36,172,2.4],[124,170,1.8],[67,124,1.8]].forEach(([x,y,r])=>
+      poly([[x,y-r*2],[x+r*.45,y-r*.45],[x+r*2,y],[x+r*.45,y+r*.45],[x,y+r*2],[x-r*.45,y+r*.45],[x-r*2,y],[x-r*.45,y-r*.45]],'winStar'));
+    poly([[18,263],[18,236],[29,236],[29,227],[41,227],[41,240],[52,240],[52,219],[58,213],[64,219],[64,232],[79,232],[79,222],
+          [97,222],[97,238],[107,238],[107,228],[116,228],[116,211],[123,211],[123,228],[133,228],[133,243],[146,243],[146,263]],'winSky');
+    [[32,241],[44,246],[56,226],[56,236],[69,238],[100,229],[110,243],[119,218],[137,248]].forEach(([x,y])=>poly(rect(x,y,x+3.2,y+3.6),'winLit'));
+    poly(rect(79,108,85,266),'winMull');poly(rect(14,184,150,190),'winMull');
     ell(322,176,112,112,'sun');
     // backbar: shelves and bottles only right of the sun, a TV, all on the back wall 1.3m behind the bar front
     const BW=-1.3,clear=2.18,hs=[.3,.26,.33,.24,.28,.31,.25,.29];
@@ -223,7 +235,7 @@ function smoothD(pts,closed=true){
 const svgWrap=(inner,defs='')=>`<svg viewBox="0 0 600 450" xmlns="http://www.w3.org/2000/svg" role="img"><defs>${defs}</defs>${inner}</svg>`;
 
 /* ---------- Saul Bass: torn paper, flat, two or three colours ---------- */
-function bass(S,v,R){const R0=R,R2=mulberry(99);
+function bass(S,v,R){const R0=R,R2=mulberry(99),R3=mulberry(5);
   const K='#151313',O='#e4572e',C='#f1e7d3',RD='#d7261e',DK='#b8361c';
   const map=v==='A'
     ?{bg:O,shelf:K,backBottle:K,backLabel:C,floor:DK,shadow:'#7e2412',front:K,rail:C,top:C,post:C,ring:C,base:C,seat:C,seatTop:O,
@@ -232,15 +244,15 @@ function bass(S,v,R){const R0=R,R2=mulberry(99);
       glass:K,liquid:RD,ice:C,garnish:C,pick:K,stem:K,foot:K,bottle:K,label:RD};
   let out='';
   if(v==='C')Object.assign(map,{figure:K,band:C,seatTop:K});
-  if(v==='E')Object.assign(map,{window:K,sun:RD,shelf:K,backBottle:K,backLabel:C,tv:K,tvScreen:RD,tvField:C,soffit:K,cord:K,globeRim:K,globe:C,
-    sign:C,gapBottle:C,btJacket:RD,btShirt:C,btBlack:K,btShaker:C,top:K,front:RD,kick:K,panel:'#b31d16',tap:K,post:K,ring:K,seat:K,figure:K,band:C,pool:K,felt:RD,lamp:K,lampStripe:C,lampGlow:RD});
+  if(v==='E')Object.assign(map,{sun:RD,shelf:K,backBottle:K,backLabel:C,tv:K,tvScreen:RD,tvField:C,soffit:K,cord:K,globeRim:K,globe:C,
+    sign:C,gapBottle:C,window:C,winPane:K,winMoon:C,winShade:K,winStar:C,winSky:RD,winLit:C,winMull:C,btJacket:RD,btShirt:C,btBlack:K,btShaker:C,top:K,front:RD,kick:K,panel:'#b31d16',tap:K,post:K,ring:K,seat:K,figure:K,band:C,pool:K,felt:RD,lamp:K,lampStripe:C,lampGlow:RD});
   if('BCD'.includes(v)) out+=`<circle cx="470" cy="150" r="118" fill="${RD}" opacity=".9"/>`;
   for(const o of S){
     if(o.t==='open'){const st=[o.pivot&&`transform-origin:${f(o.pivot[0])}px ${f(o.pivot[1])}px`,o.style].filter(Boolean).join(';');
       out+=`<g class="${o.cls}"${st?` style="${st}"`:''}>`;continue}
     if(o.t==='close'){out+='</g>';continue}
     if(o.t==='style'){out+=`<style>${o.css}</style>`;continue}
-    R=o.role&&o.role.startsWith('bt')?R2:R0;
+    R=o.role&&o.role.startsWith('bt')?R2:o.role&&o.role.startsWith('win')?R3:R0;
     const col=map[o.role];if(!col)continue;
     if(o.t==='sign'){out+=`<g class="sign" fill="${col}" font-family="'Post Grotesk','Helvetica Neue',Arial,sans-serif" font-weight="700" text-anchor="middle">`+
       o.letters.map(l=>`<text transform="matrix(${f(l.sx)} ${(l.m*l.sx).toFixed(3)} 0 1 ${f(l.x)} ${f(l.y)}) rotate(${f(l.rot)})" font-size="${f(l.fs)}">${l.ch}</text>`).join('')+'</g>';continue}

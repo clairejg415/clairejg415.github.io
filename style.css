@@ -87,9 +87,9 @@ body {
    menu stays on the same patch of floor at any size */
 .menu {
   position: absolute;
-  left: calc(26 / 600 * 100%);
-  top: calc((296 - 30) / 420 * 100%);
-  font-size: clamp(16px, 2.05cqw, 30px);
+  left: calc(14 / 600 * 100%);
+  top: calc((280 - 30) / 420 * 100%);
+  font-size: clamp(18px, 5.2cqw, 76px);
 }
 
 .menu ul {
@@ -97,31 +97,32 @@ body {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 0.32em;
+  gap: 0.02em;
   justify-items: start;
 }
 
 .menu li {
-  margin-left: calc(var(--i) * 2.6em);   /* each tag a step further down the floor */
+  margin-left: calc(var(--i) * 0.28em);   /* a gentle step down the floor, parallel to the stools */
 }
 
+/* big hand-cut capitals; a torn red strip slides in behind on hover/focus
+   and the letters turn cream */
 .menu-item {
   font: inherit;
   font-family: var(--sans);
   font-weight: 700;
-  letter-spacing: 0.04em;
-  line-height: 1;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
   white-space: nowrap;
-  color: var(--bg);
-  background: var(--ink);
+  color: var(--ink);
+  background: none;
   border: 0;
   min-height: 44px;
-  padding: 0.5em 0.85em 0.45em;
+  padding: 0.06em 0.12em;
   cursor: pointer;
-  /* torn paper edge */
-  clip-path: polygon(0 6%, 9% 0, 31% 5%, 58% 0, 83% 4%, 100% 0, 98% 52%, 100% 96%, 74% 100%, 46% 94%, 19% 100%, 2% 95%, 0 48%);
-  transform: rotate(-2.5deg);
-  transition: background-color 0.15s ease, transform 0.2s ease;
+  position: relative;
+  isolation: isolate;
+  transition: color 0.15s ease;
 }
 
 .menu-item .cut span {
@@ -129,21 +130,37 @@ body {
   transform: translateY(var(--y)) rotate(var(--r));
 }
 
-.menu-item .cut .sp { width: 0.3em; }
+.menu-item .cut .sp { width: 0.28em; }
+
+.menu-item::before {
+  content: "";
+  position: absolute;
+  inset: 0.06em -0.08em 0.1em;
+  background: var(--red);
+  clip-path: polygon(0 12%, 18% 0, 47% 9%, 76% 2%, 100% 10%, 99% 88%, 70% 100%, 38% 91%, 12% 100%, 1% 86%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.22s ease;
+  z-index: -1;
+}
 
 .menu-item:hover,
 .menu-item:focus-visible {
-  background: var(--red);
-  transform: rotate(-2.5deg) translateX(0.3em);
+  color: var(--bg);
 }
 
-/* clip-path hides an outline, so focus is marked on the list item instead */
-.menu li:has(.menu-item:focus-visible) {
+.menu-item:hover::before,
+.menu-item:focus-visible::before {
+  transform: scaleX(1);
+}
+
+/* keyboard focus also gets a ring, so it never relies on colour alone */
+.menu-item:focus-visible {
   outline: 3px solid var(--ink);
-  outline-offset: 4px;
+  outline-offset: 3px;
 }
 
-.menu-item:focus { outline: none; }
+.menu-item:focus:not(:focus-visible) { outline: none; }
 
 .hotspot {
   cursor: pointer;
@@ -199,10 +216,10 @@ body {
   .stage { width: 100vw; }
   .menu {
     position: static;
-    font-size: clamp(18px, 5.4vw, 24px);
+    font-size: clamp(30px, 10vw, 46px);
     padding: 8px 16px 0;
   }
-  .menu li { margin-left: calc(var(--i) * 1.4em); }
+  .menu li { margin-left: calc(var(--i) * 0.5em); }
 }
 
 /* ---------- the bar comes alive ----------

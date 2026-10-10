@@ -484,3 +484,21 @@ a.row:focus-visible {
   .photo.wide { margin: 2.5rem 0.5rem 2rem; }
   .photo.wide::before { right: 0; }
 }
+
+/* a subpage names where it sits, just above the title */
+.crumb {
+  margin: 0 0 1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.crumb a {
+  color: var(--fg);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.crumb a:hover { color: var(--red); }

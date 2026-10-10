@@ -8,7 +8,7 @@ Live at: https://clairejg415.github.io
 
 ## The scene
 
-The drawing itself isn't clickable; navigation is the menu (About, Projects,
+The drawing itself isn't clickable; navigation is the menu (About, Work,
 Writing, Say hello), and each item is its own page.
 
 The page is laid out as one poster built on the diagonal of the bar: the scene

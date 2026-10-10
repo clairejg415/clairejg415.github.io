@@ -139,7 +139,7 @@ body.inner {
   width: 3.2rem;
   height: 8px;
   margin-right: 0.8rem;
-  background: var(--fg);
+  background: var(--red);
 }
 
 .credits + .prose,

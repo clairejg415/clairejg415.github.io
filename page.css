@@ -142,29 +142,65 @@ body.inner {
   background: var(--fg);
 }
 
-.rows + .prose,
-.rows + .section-label { margin-top: 3rem; }
+.credits + .prose,
+.billing + .colophon { margin-top: 3rem; }
 
-/* the likes, set big like a poster's billing block */
-.likes {
-  list-style: none;
+/* work: a poster credit block. Company in small bold caps over a short line
+   of what I did there, three across, sitting under one thin rule */
+.credits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 1.2rem 2rem;
   margin: 0;
-  padding: 0;
+  padding-top: 1.1rem;
   border-top: 2px solid var(--fg);
-  border-bottom: 2px solid var(--fg);
 }
 
-.likes li {
+.credits div { min-width: 0; }
+
+.credits dt {
   font-family: var(--sans);
   font-weight: 700;
-  font-size: clamp(1.8rem, 5vw, 3.4rem);
-  line-height: 1;
+  font-size: 0.95rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
-  padding: 0.9rem 0.4rem;
+  margin: 0 0 0.35rem;
 }
 
-.likes li + li { border-top: 2px solid var(--fg); }
+.credits dd {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* likes: one billing line, each item led by a small red square */
+.billing {
+  list-style: none;
+  margin: 0;
+  padding: 1.1rem 0 0;
+  border-top: 2px solid var(--fg);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.8em;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.billing li::before {
+  content: "";
+  display: inline-block;
+  width: 0.45em;
+  height: 0.45em;
+  background: var(--red);
+  margin-right: 0.7em;
+  vertical-align: 0.15em;
+}
 
 .colophon {
   font-size: 0.85rem;

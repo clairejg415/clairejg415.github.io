@@ -400,3 +400,27 @@ a.row:focus-visible {
 /* the torn strip replaces the button's square outline while it shows */
 .filters button:hover,
 .filters button:focus-visible { border-color: transparent; }
+
+/* ---------- About: portrait beside the text ----------
+   The halftone portrait takes the empty column to the right of the
+   paragraphs. On phones it shrinks and sits above them. */
+.about-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+  gap: 1.5rem 3rem;
+  align-items: start;
+}
+
+.about-body .prose { margin-bottom: 0; }
+.about-body + .section-label { margin-top: 3rem; }
+
+.portrait {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 700px) {
+  .about-body { grid-template-columns: minmax(0, 1fr); }
+  .portrait { order: -1; width: 200px; }
+}

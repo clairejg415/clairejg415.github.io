@@ -100,16 +100,81 @@ body.inner {
   margin: 1.6rem 0 0;
 }
 
+/* running text (About): Para at reading size, between the rows */
 .prose {
   font-family: var(--display);
   font-weight: 300;
-  font-size: clamp(1.25rem, 2.6vw, 1.7rem);
-  line-height: 1.45;
-  max-width: 34ch;
-  margin: 0;
-  padding-top: 1.6rem;
-  border-top: 2px solid var(--fg);
+  font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+  line-height: 1.5;
+  max-width: 40ch;
+  display: grid;
+  gap: 1rem;
+  margin: 0 0 3rem;
 }
+
+.prose p { margin: 0; }
+
+.prose a {
+  color: inherit;
+  font-weight: 400;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.15em;
+}
+
+.prose a:hover { color: var(--red); }
+
+/* a small heading in the same voice as the row labels */
+.section-label {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 0 0 1rem;
+}
+
+.section-label b {
+  display: inline-block;
+  vertical-align: middle;
+  width: 3.2rem;
+  height: 8px;
+  margin-right: 0.8rem;
+  background: var(--fg);
+}
+
+.rows + .prose,
+.rows + .section-label { margin-top: 3rem; }
+
+/* the likes, set big like a poster's billing block */
+.likes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 2px solid var(--fg);
+  border-bottom: 2px solid var(--fg);
+}
+
+.likes li {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 5vw, 3.4rem);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  padding: 0.9rem 0.4rem;
+}
+
+.likes li + li { border-top: 2px solid var(--fg); }
+
+.colophon {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  max-width: 60ch;
+  margin: 3rem 0 0;
+  color: var(--ink-soft);
+}
+
+.theme-dark .colophon { color: var(--bg); opacity: 0.7; }
 
 /* ---------- filter buttons ---------- */
 .filters {

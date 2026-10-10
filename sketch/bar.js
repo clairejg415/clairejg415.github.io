@@ -77,12 +77,19 @@ function buildScene(v){
     const tilt=pts=>rotPts(pts,x,184,lean??p.lean);
     poly(at(p.torso),'figure');
     for(const s of[-1,1]){const sh=[x+s*(p.shoulder-5),200],el=[x+s*(p.shoulder+17),213],hand=[x+s*(p.shoulder-8),213];
-      line(sh,el,p.legW+4,'figure');line(el,hand,p.legW+1,'figure');ell(el[0],el[1],(p.legW+4)/2,(p.legW+4)/2,'figure')}
+      const sip=lean!==undefined&&k==='fedora'&&s===1;
+      line(sh,el,p.legW+4,'figure');
+      if(sip)S.push({t:'open',cls:'sip-arm',pivot:el,target:rotPts([hand],el[0],el[1],70)[0]});
+      line(el,hand,p.legW+1,'figure');
+      if(sip)S.push({t:'close'});
+      ell(el[0],el[1],(p.legW+4)/2,(p.legW+4)/2,'figure')}
+    if(lean!==undefined)S.push({t:'open',cls:'head-'+k,pivot:[x,184]});
     poly(tilt(rect(x-5,166,x+5,188)),'figure');
     poly(tilt(ellPts(x,162,p.head[0],p.head[1],36)),'figure');
     if(p.hair)poly(tilt(at(p.hair)),'figure');
     if(p.crown){poly(tilt(ellPts(x,150,27,5.5,40)),'figure');poly(tilt(at(p.crown).filter(q=>q[1]<=150.5)),'figure');
       poly(tilt(rect(x-14.5,141,x+14.5,146.5)),'band')}
+    if(lean!==undefined)S.push({t:'close'});
   };
   const backedStool=(x,who)=>{
     ell(x,404,66,7,'shadow');
@@ -105,7 +112,7 @@ function buildScene(v){
     const P=(s,off,h)=>{const X=N0[0]+s*D[0]+off*NN[0],Z=zOf(s,off);return [300+F*X/Z,225-F*(h-CH)/Z]};
     const ppm=(s,off)=>F/zOf(s,off);
     const face=(s0,s1,off,h0,h1,role)=>poly([P(s0,off,h1),P(s1,off,h1),P(s1,off,h0),P(s0,off,h0)],role);
-    const xf=(n0,map,k)=>{for(const o of S.slice(n0)){if(o.pts)o.pts=o.pts.map(map);
+    const xf=(n0,map,k)=>{for(const o of S.slice(n0)){if(o.pts)o.pts=o.pts.map(map);if(o.pivot)o.pivot=map(o.pivot);if(o.target)o.target=map(o.target);
       if(o.a){o.a=map(o.a);o.b=map(o.b);o.w=Math.max(1.2,o.w*k)}
       if(o.t==='ell'||o.t==='ring'){[o.cx,o.cy]=map([o.cx,o.cy]);o.rx*=k;o.ry=Math.max(1,o.ry*k);if(o.t==='ring')o.w*=k}}};
     const hull=pts=>{pts=[...pts].sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);
@@ -119,9 +126,29 @@ function buildScene(v){
     const BW=-1.3,clear=2.18,hs=[.3,.26,.33,.24,.28,.31,.25,.29];
     [1.48,1.9].forEach((h,j)=>{face(-1,clear,BW,h-.035,h,'shelf');
       let i=j*3;for(let q=-.9;q<clear-.1;q+=.17){if(j===1&&q>.15&&q<1.6)continue;const [bx,by]=P(q,BW,h),sc=ppm(q,BW);
-        bottle(bx,by,hs[i++%8]*sc,'backBottle','backLabel',Math.max(1.6,.04*sc))}});
+        const gap=j===0&&q>.45&&q<1.2; // a clear patch of wall where the bartender stands
+        bottle(bx,by,hs[i++%8]*sc,gap?'gapBottle':'backBottle',gap?'gapBottle':'backLabel',Math.max(1.6,.04*sc))}});
     face(.3,1.5,BW+.01,1.98,2.38,'tv');face(.36,1.44,BW+.02,2.02,2.34,'tvScreen');
     poly([P(.9,BW+.03,2.05),P(1.15,BW+.03,2.17),P(.9,BW+.03,2.29),P(.65,BW+.03,2.17)],'tvField');
+    // the bartender: local units are centimetres, origin at his waist where the bar cuts him off.
+    // CSS walks him in from the right, shakes a cocktail, and walks him back out (see the <style> below).
+    const BT=-.95,btAt=q=>{const [X,Y]=P(q,BT,BAR);return `translate(${X.toFixed(1)}px,${Y.toFixed(1)}px) scale(${(ppm(q,BT)/100*1.2).toFixed(3)})`};
+    S.push({t:'open',cls:'bartender',style:`transform:${btAt(-1.6)}`});
+    poly(spline([[-17,4],[17,4],[19,-20],[21,-31],[13,-35],[5,-36],[-5,-36],[-13,-35],[-21,-31],[-19,-20]]),'btJacket');
+    poly([[-5,-36],[5,-36],[0,-21]],'btShirt');poly([[-5,-35],[0,-32.5],[5,-35],[5,-30],[0,-32.5],[-5,-30]],'btBlack');
+    poly(rect(-3.5,-41,3.5,-35),'btBlack');poly(ellPts(0,-47,9,11,30),'btBlack');
+    S.push({t:'open',cls:'bt-down'});
+    for(const d of[-1,1]){line([d*20,-30],[d*23,-12],8,'btJacket');line([d*23,-12],[d*15,2],7,'btJacket')}
+    S.push({t:'close'});
+    S.push({t:'open',cls:'bt-up',style:'opacity:0'});
+    line([20,-30],[28,-20],8,'btJacket');line([28,-20],[17,-43],7,'btJacket');
+    line([-20,-30],[-24,-19],8,'btJacket');line([-24,-19],[6,-36],7,'btJacket');
+    S.push({t:'open',cls:'bt-shaker',pivot:[12,-46]});
+    poly([[3,-32],[14.5,-29.5],[21,-56],[11,-60]],'btBlack');poly([[5,-34],[13,-32],[19,-56],[12,-58]],'btShaker');poly([[12,-58],[19,-56],[19,-62],[14,-63]],'btBlack');
+    ell(17,-44,3.4,3.4,'btBlack');ell(7,-36,3.4,3.4,'btBlack');
+    S.push({t:'close'},{t:'close'},{t:'close'});
+    const walk=[[0,-1.6],[61,-1.6],[64,-.6],[67,.2],[69,.6],[86,.6],[88,.2],[91,-.6],[94,-1.6],[100,-1.6]];
+    S.push({t:'style',css:`@keyframes bt-walk{${walk.map(([p,q])=>`${p}%{transform:${btAt(q)}}`).join('')}}`});
     // canopy over the bar
     face(-1.5,8.2,.25,2.45,3.4,'soffit');
     poly([P(-1.5,.25,2.45),P(8.2,.25,2.45),P(8.2,BW,2.45),P(-1.5,BW,2.45)],'soffit');
@@ -143,7 +170,7 @@ function buildScene(v){
     // drinks at 1.5x true size
     const drinkAt=(fn,q,off,realH,origH)=>{const [bx,by]=P(q,off,BAR),k=realH*1.5*ppm(q,off)/origH,n0=S.length;fn(bx);
       xf(n0,([px,py])=>[bx+(px-bx)*k,by+(py-Y)*k],k)};
-    drinkAt(drinks.coupe,.98,-.22,.15,58);drinkAt(drinks.rocks,2.66,-.22,.09,50);drinkAt(drinks.bottle,3.2,-.3,.30,112);
+    drinkAt(drinks.coupe,.98,-.22,.15,58);const gi=S.push({t:'open',cls:'sip-glass'})-1,gb=P(2.66,-.22,BAR),gh=.09*1.5*ppm(2.66,-.22);drinkAt(drinks.rocks,2.66,-.22,.09,50);S.push({t:'close'});drinkAt(drinks.bottle,3.2,-.3,.30,112);
     // a row of backless stools, far to near; two of them taken
     const who={1.4:['bob',-7],2.2:['fedora',6]};
     [6.2,5.4,4.6,3.8,3,2.2,1.4,.6,-.2].forEach(q=>{const sc=ppm(q,.5),a=.19,w=who[q];
@@ -155,6 +182,7 @@ function buildScene(v){
       poly(hull(C4.flatMap(([i,j])=>[P(q+i*a,.5+j*a,.78),P(q+i*a,.5+j*a,.69)])),'seat');
       if(w)fig(()=>body(0,w[0],w[1]));
     });
+    {const arm=S.find(o=>o.cls==='sip-arm');S[gi].style=`--dx:${(arm.target[0]-gb[0]).toFixed(1)}px;--dy:${(arm.target[1]-gb[1]+gh*.45).toFixed(1)}px`}
     // foreground: pool table corner and its lamp, cropped by the frame
     poly([[0,372],[172,450],[0,450]],'pool');poly([[0,394],[124,450],[0,450]],'felt');
     poly([[0,0],[150,0],[176,58],[0,98]],'lamp');poly([[0,80],[168,42],[171,49],[0,87]],'lampStripe');poly([[0,98],[176,58],[179,65],[0,106]],'lampGlow');
@@ -198,7 +226,7 @@ function smoothD(pts,closed=true){
 const svgWrap=(inner,defs='')=>`<svg viewBox="0 0 600 450" xmlns="http://www.w3.org/2000/svg" role="img"><defs>${defs}</defs>${inner}</svg>`;
 
 /* ---------- Saul Bass: torn paper, flat, two or three colours ---------- */
-function bass(S,v,R){
+function bass(S,v,R){const R0=R,R2=mulberry(99);
   const K='#151313',O='#e4572e',C='#f1e7d3',RD='#d7261e',DK='#b8361c';
   const map=v==='A'
     ?{bg:O,shelf:K,backBottle:K,backLabel:C,floor:DK,shadow:'#7e2412',front:K,rail:C,top:C,post:C,ring:C,base:C,seat:C,seatTop:O,
@@ -208,9 +236,15 @@ function bass(S,v,R){
   let out='';
   if(v==='C')Object.assign(map,{figure:K,band:C,seatTop:K});
   if(v==='E')Object.assign(map,{window:K,sun:RD,shelf:K,backBottle:K,backLabel:C,tv:K,tvScreen:RD,tvField:C,soffit:K,cord:K,globeRim:K,globe:C,
-    sign:C,top:K,front:RD,kick:K,panel:'#b31d16',tap:K,post:K,ring:K,seat:K,figure:K,band:C,pool:K,felt:RD,lamp:K,lampStripe:C,lampGlow:RD});
+    sign:C,gapBottle:C,btJacket:RD,btShirt:C,btBlack:K,btShaker:C,top:K,front:RD,kick:K,panel:'#b31d16',tap:K,post:K,ring:K,seat:K,figure:K,band:C,pool:K,felt:RD,lamp:K,lampStripe:C,lampGlow:RD});
   if('BCD'.includes(v)) out+=`<circle cx="470" cy="150" r="118" fill="${RD}" opacity=".9"/>`;
-  for(const o of S){const col=map[o.role];if(!col)continue;
+  for(const o of S){
+    if(o.t==='open'){const st=[o.pivot&&`transform-origin:${f(o.pivot[0])}px ${f(o.pivot[1])}px`,o.style].filter(Boolean).join(';');
+      out+=`<g class="${o.cls}"${st?` style="${st}"`:''}>`;continue}
+    if(o.t==='close'){out+='</g>';continue}
+    if(o.t==='style'){out+=`<style>${o.css}</style>`;continue}
+    R=o.role&&o.role.startsWith('bt')?R2:R0;
+    const col=map[o.role];if(!col)continue;
     if(o.t==='sign'){out+=`<g class="sign" fill="${col}" font-family="'Post Grotesk','Helvetica Neue',Arial,sans-serif" font-weight="700" text-anchor="middle">`+
       o.letters.map(l=>`<text transform="matrix(${f(l.sx)} ${(l.m*l.sx).toFixed(3)} 0 1 ${f(l.x)} ${f(l.y)}) rotate(${f(l.rot)})" font-size="${f(l.fs)}">${l.ch}</text>`).join('')+'</g>';continue}
     const sh=shapeOf(o).map(p=>{const bb=bbox(p),amp=Math.min(o.role==='figure'?.45:1.15,Math.min(bb.w,bb.h)*.07);return polyD(jitter(subdiv(p,o.role==='figure'?4:8),amp,R))});

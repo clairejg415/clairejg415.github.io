@@ -127,6 +127,61 @@ body {
   .hotspot .tag { opacity: 1; transform: none; }
 }
 
+/* ---------- the bar comes alive ----------
+   The couple talk (heads tilt and nod) and he takes a sip now and then.
+   Once a minute the bartender walks in behind the bar, shakes a cocktail and
+   walks out; his walk path comes from the scene generator (sketch/bar.js).
+   Everything holds still for people who ask for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .head-fedora { animation: talk-him 7s ease-in-out infinite; }
+  .head-bob    { animation: talk-her 9s ease-in-out 1.5s infinite; }
+  .sip-arm     { animation: sip-arm 22s ease-in-out 4s infinite; }
+  .sip-glass   { animation: sip-glass 22s ease-in-out 4s infinite; }
+
+  /* delay is negative so his first entrance comes about 8s after load */
+  .bartender   { animation: bt-walk 60s linear -29s infinite; }
+  .bt-down     { animation: bt-down 60s steps(1, end) -29s infinite; }
+  .bt-up       { animation: bt-up 60s steps(1, end) -29s infinite; }
+  .bt-shaker   { animation: shake 0.22s ease-in-out infinite alternate; }
+}
+
+@keyframes talk-him {
+  0%, 100% { transform: rotate(0); }
+  15% { transform: rotate(6deg); }
+  22% { transform: rotate(3deg); }
+  29% { transform: rotate(7deg); }
+  36% { transform: rotate(4deg); }
+  50% { transform: rotate(6deg); }
+  65% { transform: rotate(0); }
+}
+
+@keyframes talk-her {
+  0%, 100% { transform: rotate(0); }
+  12% { transform: rotate(-5deg); }
+  20% { transform: rotate(-2deg); }
+  28% { transform: rotate(-6deg); }
+  45% { transform: rotate(2deg) translateY(-1px); }
+  55% { transform: rotate(0); }
+}
+
+@keyframes sip-arm {
+  0%, 68%, 100% { transform: rotate(0); }
+  76%, 88% { transform: rotate(70deg); }
+}
+
+@keyframes sip-glass {
+  0%, 68%, 100% { transform: translate(0, 0); }
+  76%, 88% { transform: translate(var(--dx), var(--dy)); }
+}
+
+@keyframes bt-down { 0% { opacity: 1; } 70% { opacity: 0; } 84% { opacity: 1; } }
+@keyframes bt-up   { 0% { opacity: 0; } 70% { opacity: 1; } 84% { opacity: 0; } }
+
+@keyframes shake {
+  from { transform: translateY(1.5px) rotate(-7deg); }
+  to   { transform: translateY(-2.5px) rotate(7deg); }
+}
+
 /* ---------- overlay + panels ---------- */
 .overlay {
   position: fixed;

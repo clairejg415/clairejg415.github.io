@@ -255,11 +255,8 @@ body {
   .sip-arm     { animation: sip-arm 22s ease-in-out 4s infinite; }
   .sip-glass   { animation: sip-glass 22s ease-in-out 4s infinite; }
 
-  /* delay is negative so his first entrance comes about 8s after load */
-  .bartender   { animation: bt-walk 60s linear -29s infinite; }
-  .bt-down     { animation: bt-down 60s steps(1, end) -29s infinite; }
-  .bt-up       { animation: bt-up 60s steps(1, end) -29s infinite; }
-  .bt-shaker   { animation: shake 0.22s ease-in-out infinite alternate; }
+  /* the bartender's choreography is generated with the scene: see the
+     <style> inside the SVG and photoBar() in sketch/bar.js */
 }
 
 @keyframes talk-him {
@@ -291,13 +288,6 @@ body {
   76%, 88% { transform: translate(var(--dx), var(--dy)); }
 }
 
-@keyframes bt-down { 0% { opacity: 1; } 70% { opacity: 0; } 84% { opacity: 1; } }
-@keyframes bt-up   { 0% { opacity: 0; } 70% { opacity: 1; } 84% { opacity: 0; } }
-
-@keyframes shake {
-  from { transform: translateY(1.5px) rotate(-7deg); }
-  to   { transform: translateY(-2.5px) rotate(7deg); }
-}
 
 /* ---------- footer ---------- */
 /* a credit block on black, like the bottom of a film poster */

@@ -479,8 +479,15 @@ a.row:focus-visible {
 
 .photo.wide::before { left: auto; right: -5%; top: -8%; width: 30%; }
 
+/* two photos stacked in the side column */
+.photo-stack { display: grid; gap: 3.5rem; }
+.photo.sun-right::before { left: auto; right: -7%; top: auto; bottom: 12%; }
+
 @media (max-width: 700px) {
   .about-body .photo { order: -1; width: 240px; margin: 0.5rem 0 1rem 0.5rem; }
+  .about-body .photo-stack { order: -1; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .photo-stack .photo { width: auto; margin: 0.5rem 0.3rem 1rem; }
+  .photo.sun-right::before { right: 0; top: -6%; bottom: auto; width: 36%; }
   .photo.wide { margin: 2.5rem 0.5rem 2rem; }
   .photo.wide::before { right: 0; }
 }

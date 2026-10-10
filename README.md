@@ -9,21 +9,18 @@ Live at: https://clairejg415.github.io
 ## The scene
 
 The drawing itself isn't clickable; navigation is the menu (About, Projects,
-Writing, Say hello), which opens a panel for each. The Things I'm into panel is
-still in `index.html` but nothing opens it.
+Writing, Say hello), and each item is its own page. `interests.html` still
+exists, but nothing links to it since the bottles stopped being clickable.
 
 The page is laid out as one poster built on the diagonal of the bar: the scene
-runs off the top and right edges, and the menu sits on the open floor in big hand-cut capitals stepping down
-parallel to the
-stools. On wide screens (wider than 17:10) the menu instead moves into the
+runs off the top and right edges, and the menu sits on the open floor in big
+hand-cut capitals stepping down parallel to the stools. On wide screens (wider than 17:10) the menu instead moves into the
 empty strip left of the picture, right-aligned and locked to the window's top
 and bottom, leaving the floor open. On screens under 760px wide the menu moves below the picture so it
 stays readable.
 
-Accessibility: the menu is a list of real buttons (44px minimum height, cream
-on black, visible focus ring). Panels are modal dialogs: focus moves into the
-panel, the rest of the page is made inert, Escape closes, and focus returns to
-the menu. All animation stops under prefers-reduced-motion.
+Accessibility: the menu is a labelled list of real links (44px minimum height,
+visible focus ring). All animation stops under prefers-reduced-motion.
 
 ## How the drawing is made
 

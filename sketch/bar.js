@@ -125,6 +125,15 @@ function buildScene(v){
     // canopy over the bar
     face(-1.5,8.2,.25,2.45,3.4,'soffit');
     poly([P(-1.5,.25,2.45),P(8.2,.25,2.45),P(8.2,BW,2.45),P(-1.5,BW,2.45)],'soffit');
+    // her name painted on the canopy like a bar sign, receding with it: 45cm capitals, cut-paper jitter
+    {const W={C:.68,L:.56,A:.72,I:.3,R:.66,E:.6,J:.52,O:.78,B:.67,S:.62,' ':.34},cap=.45,fs=cap/.7,track=.07,base=2.53,off=.26;
+      const text='CLAIRE JACOBS',total=[...text].reduce((t,ch)=>t+W[ch]*fs+track,0)-track;
+      let q=1.85+total,i=0;const letters=[];
+      for(const ch of text){const w=W[ch]*fs,mid=q-w/2;q-=w+track;i++;if(ch===' ')continue;
+        const [x,y]=P(mid,off,base),[x2,y2]=P(mid-.01,off,base),top=P(mid,off,base+cap)[1];
+        const m=(y2-y)/(x2-x),sx=(x2-x)/.01/ppm(mid,off),j=Math.sin(i*12.9898)*43758.5453,jr=j-Math.floor(j);
+        letters.push({ch,x,y:y+(jr-.5)*1.6,fs:(y-top)/.7,sx,m,rot:(jr-.5)*4})}
+      S.push({t:'sign',role:'sign',letters})}
     line(P(1.2,-.35,2.45),P(1.2,-.35,2.13),1.6,'cord');{const [gx,gy]=P(1.2,-.35,2.03),r=.11*ppm(1.2,-.35);ell(gx,gy,r+2,r+2,'globeRim');ell(gx,gy,r,r,'globe')}
     // the bar itself
     poly([P(-1.5,.04,BAR),P(8,.04,BAR),P(8,-.65,BAR),P(-1.5,-.65,BAR)],'top');
@@ -199,9 +208,11 @@ function bass(S,v,R){
   let out='';
   if(v==='C')Object.assign(map,{figure:K,band:C,seatTop:K});
   if(v==='E')Object.assign(map,{window:K,sun:RD,shelf:K,backBottle:K,backLabel:C,tv:K,tvScreen:RD,tvField:C,soffit:K,cord:K,globeRim:K,globe:C,
-    top:K,front:RD,kick:K,panel:'#b31d16',tap:K,post:K,ring:K,seat:K,figure:K,band:C,pool:K,felt:RD,lamp:K,lampStripe:C,lampGlow:RD});
+    sign:C,top:K,front:RD,kick:K,panel:'#b31d16',tap:K,post:K,ring:K,seat:K,figure:K,band:C,pool:K,felt:RD,lamp:K,lampStripe:C,lampGlow:RD});
   if('BCD'.includes(v)) out+=`<circle cx="470" cy="150" r="118" fill="${RD}" opacity=".9"/>`;
   for(const o of S){const col=map[o.role];if(!col)continue;
+    if(o.t==='sign'){out+=`<g class="sign" fill="${col}" font-family="'Post Grotesk','Helvetica Neue',Arial,sans-serif" font-weight="700" text-anchor="middle">`+
+      o.letters.map(l=>`<text transform="matrix(${f(l.sx)} ${(l.m*l.sx).toFixed(3)} 0 1 ${f(l.x)} ${f(l.y)}) rotate(${f(l.rot)})" font-size="${f(l.fs)}">${l.ch}</text>`).join('')+'</g>';continue}
     const sh=shapeOf(o).map(p=>{const bb=bbox(p),amp=Math.min(o.role==='figure'?.45:1.15,Math.min(bb.w,bb.h)*.07);return polyD(jitter(subdiv(p,o.role==='figure'?4:8),amp,R))});
     out+=`<path d="${sh.join('')}" fill="${col}" fill-rule="evenodd"/>`}
   if(v==='B') out=`<g transform="rotate(-3.5 300 225) translate(-12 -6) scale(1.05)">${out}</g>`;

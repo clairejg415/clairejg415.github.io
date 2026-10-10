@@ -50,33 +50,20 @@ body {
   font-weight: 400;
 }
 
-/* ---------- intro ---------- */
-.intro {
-  text-align: center;
-  padding: 3.5rem 1.5rem 1.5rem;
-}
-
-.intro h1 {
-  font-family: var(--display);
-  font-weight: 300;
-  font-size: clamp(2.2rem, 6vw, 3.2rem);
-  margin: 0;
-  letter-spacing: 0.01em;
-}
-
-.intro .sub {
-  margin: 0.6rem 0 0;
-  font-size: 0.95rem;
-  letter-spacing: 0.06em;
-  color: var(--ink-soft);
-  text-transform: lowercase;
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 /* ---------- room ---------- */
+/* the picture runs edge to edge */
 .room-wrap {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 1.5rem 3rem;
+  margin: 0;
+  padding: 0;
 }
 
 .room {

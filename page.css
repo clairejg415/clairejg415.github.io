@@ -145,7 +145,8 @@ body.inner {
 .credits + .prose,
 .billing + .colophon { margin-top: 3rem; }
 .prose + .section-label,
-.credits + .section-label { margin-top: 3rem; }
+.credits + .section-label,
+.rows + .section-label { margin-top: 3rem; }
 
 /* work: a poster credit block. Company in small bold caps over a short line
    of what I did there, three across, sitting under one thin rule */
@@ -262,7 +263,7 @@ body.inner {
 
 .row {
   display: grid;
-  grid-template-columns: 9rem minmax(0, 1fr) 6rem;
+  grid-template-columns: 9rem minmax(0, 1fr) minmax(6rem, auto);
   gap: 0.3rem 1.4rem;
   align-items: baseline;
   padding: 1.3rem 0.4rem;
@@ -367,6 +368,7 @@ a.row:focus-visible {
 }
 
 .src {
+  white-space: nowrap;
   font-size: 0.66rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;

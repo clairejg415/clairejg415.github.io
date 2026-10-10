@@ -1,0 +1,17 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Bar scene generator</title>
+<!-- Open in a browser. Shows the Saul Bass bar scene and its SVG markup, which is
+     pasted into the <g class="scene"> group in ../index.html. Change the seed for
+     a different tear on the paper edges; the homepage uses seed 7. -->
+<body style="margin:0;padding:20px;background:#eee;font:14px sans-serif">
+<label>seed <input id="seed" type="number" value="7"></label>
+<div id="art" style="max-width:900px;margin:12px 0"></div>
+<textarea id="code" style="width:100%;height:200px"></textarea>
+<script src="bar.js"></script>
+<script>
+function render(){const svg=bass(buildScene('E'),'E',mulberry(+seed.value));
+  art.innerHTML=svg;code.value=svg}
+seed.addEventListener('input',render);render();
+</script>
+</body>

@@ -1,7 +1,8 @@
 # claire.github.io
 
-Personal site for Claire Jacobs — an illustrated cafe counter, drawn in a
-weighted pen-sketch style. Click around the scene to explore.
+Personal site for Claire Jacobs: a bar drawn in the style of a Saul Bass poster,
+red, black and cream, with a couple at the bar against a red sun. Click around the
+scene to explore.
 
 Live at: https://clairejg415.github.io
 
@@ -11,29 +12,25 @@ Four things in the drawing are clickable:
 
 | Object | Opens |
 | --- | --- |
-| The person on the near stool | About me |
-| The rack of mugs | Things I'm into |
-| The coffee machine | Projects |
-| The cup of coffee on the bar | Say hello |
+| The empty stool nearest you | About me |
+| The bottles on the backbar | Things I'm into |
+| The TV over the bar | Projects |
+| The coupe on the bar | Say hello |
+
+The clickable areas are the `.hotspot` groups at the end of the `<svg>` in
+`index.html`, drawn on top of the picture.
 
 ## How the drawing is made
 
-The illustration is **generated**, not hand-authored. `sketch/nib.py` turns a
-centreline plus a width profile into a filled, tapered shape — the way a real
-pen stroke thickens under pressure and tapers off at the ends. `sketch/scene.py`
-lays the scene out on a perspective grid (eye level y=210, vanishing point off
-to the right) where heights come from real dimensions: the bar is 105cm, a stool
-seat is 75cm, a seated shoulder is 58cm above the seat. That's what makes the
-figures actually sit at the bar rather than float near it.
+The illustration is generated. `sketch/bar.js` lays the bar out with a simple
+3D projection (camera at 1.25m, bar receding to the left, real heights for the
+bar, stools and drinks) and draws every object as a flat torn-paper shape.
+Open `sketch/bar.html` in a browser to see it and copy its SVG markup into the
+`<g class="scene">` group in `index.html`.
 
-To change the drawing, edit `sketch/scene.py` and run:
-
-```sh
-python3 sketch/scene.py
-```
-
-It rewrites the `<main>` block inside `index.html` in place. Everything outside
-that block — the panels, styles, and interaction code — is hand-maintained.
+`sketch/nib.py` and `sketch/scene.py` are the earlier pen-sketch version.
+Don't run `scene.py`: it rewrites `<main>` in `index.html` and would replace
+the current drawing.
 
 ## Editing the content
 
@@ -50,7 +47,7 @@ Open `index.html` and replace anything marked `<!-- TODO -->`:
 - `style.css` — type, colour, panels, hover states
 - `script.js` — opens and closes the panels
 - `fonts/` — Para and Post Grotesk
-- `sketch/` — the drawing generator
+- `sketch/` — the drawing generators (`bar.js` is the current one)
 
 No build step for the site itself; it's plain HTML/CSS/JS. Push to `main` and
 GitHub Pages redeploys.

@@ -31,10 +31,11 @@
 }
 
 :root {
-  --bg: #f1efe9;
-  --ink: #4d4a44;
-  --ink-soft: #948d80;
-  --panel-bg: #fbfaf6;
+  --bg: #f1e7d3;
+  --ink: #151313;
+  --ink-soft: #6e6458;
+  --panel-bg: #f8f0e0;
+  --red: #d7261e;
   --display: 'Para', serif;
   --sans: 'Post Grotesk', sans-serif;
 }
@@ -84,86 +85,50 @@ body {
   display: block;
 }
 
-.room .nib {
-  fill: var(--ink);
-  fill-rule: evenodd;
-  stroke: none;
-  transition: fill 0.2s ease;
-}
-
-.room ellipse,
-.room rect:not(.hit) {
-  fill: none;
-  stroke: none;
-}
-
-.room .ink {
-  filter: url(#sketchy);
-}
-
-.hatch-line {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 1;
-}
-
-.room rect.hatched,
-.room ellipse.hatched,
-.room path.hatched {
-  fill: url(#hatch);
-}
-
-.room rect.solid,
-.room ellipse.solid,
-.room path.solid {
-  fill: var(--bg);
-}
-
 .hotspot {
   cursor: pointer;
   outline: none;
 }
 
 .hotspot .hit {
-  cursor: pointer;
+  fill: transparent;
+  stroke: none;
 }
 
-.hotspot:hover .nib,
-.hotspot:focus-visible .nib {
-  fill: #1f1d1a;
+.hotspot:focus-visible .hit {
+  stroke: var(--red);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
 }
 
-.hotspot:hover .ink,
-.hotspot:focus-visible .ink {
-  transform: translateY(-2px);
-}
-
-.room .ink {
-  transition: transform 0.25s ease;
-}
-
-.hotspot-label {
-  font-family: var(--sans);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  fill: var(--ink-soft);
+/* red paper tags, Bass-style; shown on hover or keyboard focus */
+.hotspot .tag {
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
   pointer-events: none;
 }
 
-.hotspot:hover .hotspot-label,
-.hotspot:focus-visible .hotspot-label {
-  opacity: 1;
+.hotspot .tag rect {
+  fill: var(--red);
 }
 
-.sign-text {
+.hotspot .tag text {
   font-family: var(--sans);
   font-size: 11px;
-  font-weight: 700;
   letter-spacing: 0.08em;
-  fill: var(--ink);
-  stroke: none;
+  fill: var(--bg);
+}
+
+.hotspot:hover .tag,
+.hotspot:focus-visible .tag {
+  opacity: 1;
+  transform: none;
+}
+
+/* touch screens can't hover, so keep the tags visible there */
+@media (hover: none) {
+  .hotspot .tag { opacity: 1; transform: none; }
 }
 
 /* ---------- overlay + panels ---------- */

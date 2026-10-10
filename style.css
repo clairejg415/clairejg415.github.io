@@ -137,8 +137,8 @@ body {
   letter-spacing: 0.01em;
   white-space: nowrap;
   color: var(--ink);
-  background: none;
-  border: 0;
+  text-decoration: none;
+  display: inline-block;
   min-height: 44px;
   padding: 0.06em 0.12em;
   cursor: pointer;
@@ -228,7 +228,7 @@ body {
 /* touch screens can't hover; the menu covers the other panels, so only the
    bottles (reachable nowhere else) keep a visible label there */
 @media (hover: none) {
-  .hotspot[data-panel="interests"] .tag { opacity: 1; transform: none; }
+  .hotspot[data-href="interests.html"] .tag { opacity: 1; transform: none; }
 }
 
 /* phones and narrow windows: the floor is too small to hold readable tags,
@@ -299,157 +299,6 @@ body {
   to   { transform: translateY(-2.5px) rotate(7deg); }
 }
 
-/* ---------- overlay + panels ---------- */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(30, 28, 24, 0.35);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-  z-index: 10;
-}
-
-.overlay.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.panel {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -46%);
-  width: min(520px, 90vw);
-  max-height: 82vh;
-  overflow-y: auto;
-  background: var(--panel-bg);
-  border: 1px solid var(--ink);
-  border-radius: 2px;
-  padding: 2.5rem 2rem 2rem;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.25s ease, transform 0.25s ease;
-  z-index: 11;
-}
-
-.panel.open {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, -50%);
-}
-
-.panel h2 {
-  font-family: var(--display);
-  font-weight: 400;
-  font-size: 1.9rem;
-  margin: 0 0 1rem;
-}
-
-.panel .close {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.9rem;
-  background: none;
-  border: none;
-  font-size: 1.6rem;
-  line-height: 1;
-  color: var(--ink-soft);
-  cursor: pointer;
-  font-family: var(--sans);
-}
-
-.panel .close:hover {
-  color: var(--ink);
-}
-
-.bio {
-  font-size: 1.05rem;
-  line-height: 1.65;
-}
-
-.interest-grid {
-  display: grid;
-  gap: 1.2rem;
-}
-
-.interest-card h3 {
-  font-family: var(--display);
-  font-weight: 400;
-  font-size: 1.15rem;
-  margin: 0 0 0.2rem;
-}
-
-.interest-card p {
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.project-list {
-  display: grid;
-  gap: 1.4rem;
-}
-
-.project-item h3 {
-  font-family: var(--display);
-  font-weight: 400;
-  font-size: 1.2rem;
-  margin: 0 0 0.2rem;
-}
-
-.project-tag {
-  margin: 0 0 0.4rem;
-  color: var(--ink-soft);
-  font-size: 0.95rem;
-}
-
-.view-link {
-  color: var(--ink);
-  text-decoration: none;
-  border-bottom: 1px solid var(--ink);
-  font-size: 0.9rem;
-}
-
-.view-link:hover {
-  color: var(--ink-soft);
-  border-color: var(--ink-soft);
-}
-
-.contact-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem;
-  font-size: 1.05rem;
-  line-height: 2.1;
-}
-
-.contact-list span {
-  display: inline-block;
-  width: 90px;
-  color: var(--ink-soft);
-  font-size: 0.85rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  vertical-align: middle;
-}
-
-.contact-list a {
-  color: var(--ink);
-}
-
-.etiquette {
-  font-family: var(--display);
-  font-weight: 300;
-  color: var(--ink-soft);
-  margin: 0;
-}
-
-body.no-scroll {
-  overflow: hidden;
-}
-
 /* ---------- footer ---------- */
 /* a credit block on black, like the bottom of a film poster */
 .site-footer {
@@ -465,14 +314,3 @@ body.no-scroll {
   margin: 0;
 }
 
-/* ---------- responsive ---------- */
-@media (max-width: 560px) {
-  .panel {
-    padding: 2.2rem 1.4rem 1.6rem;
-  }
-  .contact-list span {
-    display: block;
-    width: auto;
-    margin-bottom: 0.1rem;
-  }
-}

@@ -1,0 +1,301 @@
+/* ---------- inner pages ----------
+   Every page off the bar is built the same way, after the Psycho title
+   sequence: one big title, two heavy rules under it, then the content as
+   full-width bands between thin rules. A page is either dark (cream on
+   black) or light (black on cream); the theme only swaps --fg and --ground,
+   so the layout never changes between them. */
+
+.theme-dark  { --ground: var(--ink); --fg: var(--bg); }
+.theme-light { --ground: var(--bg);  --fg: var(--ink); }
+
+body.inner {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: var(--ground);
+  color: var(--fg);
+  --gutter: clamp(16px, 5vw, 56px);
+}
+
+.page {
+  flex: 1;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--gutter) 4rem;
+}
+
+/* ---------- top strip: black on every page ---------- */
+.page-top {
+  background: var(--ink);
+  color: var(--bg);
+  border-bottom: 2px solid var(--fg);
+}
+
+.page-top-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  min-height: 52px;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.page-top a {
+  color: var(--bg);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.2rem;
+}
+
+.page-top > div > a:hover,
+.page-top a[aria-current="page"] { color: var(--red); }
+.page-top nav a { padding: 0 0.5rem; }
+
+.page-top a:focus-visible {
+  outline: 2px solid var(--bg);
+  outline-offset: 2px;
+}
+
+.page-top nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: clamp(0.6rem, 2vw, 1.6rem);
+}
+
+/* ---------- title block ---------- */
+.page-head {
+  padding: clamp(2rem, 6vw, 4.5rem) 0 2rem;
+}
+
+/* one size on every page, set so the longest title (SAY HELLO) fits the column */
+.page-title {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: min(200px, calc((min(100vw, 1100px) - 2 * var(--gutter)) / (9 * 0.66)));
+  line-height: 0.78;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.rule { height: 14px; background: var(--fg); margin-top: 1.6rem; }
+.rule.short { height: 6px; margin-top: 8px; width: 62%; }
+
+.page-dek {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+  line-height: 1.4;
+  max-width: 32ch;
+  margin: 1.6rem 0 0;
+}
+
+.prose {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(1.25rem, 2.6vw, 1.7rem);
+  line-height: 1.45;
+  max-width: 34ch;
+  margin: 0;
+  padding-top: 1.6rem;
+  border-top: 2px solid var(--fg);
+}
+
+/* ---------- filter buttons ---------- */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 1.4rem;
+}
+
+.filters button {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg);
+  background: none;
+  border: 2px solid var(--fg);
+  min-height: 44px;
+  padding: 0 1rem;
+  cursor: pointer;
+}
+
+.filters button[aria-pressed="true"] {
+  background: var(--fg);
+  color: var(--ground);
+}
+
+.filters button[aria-pressed="true"]:hover,
+.filters button[aria-pressed="true"]:focus-visible { background: none; }
+
+.filters button:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 2px;
+}
+
+/* ---------- rows ---------- */
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rows li { border-top: 2px solid var(--fg); }
+.rows li:last-child { border-bottom: 2px solid var(--fg); }
+.rows li[hidden] { display: none; }
+
+.row {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr) 6rem;
+  gap: 0.3rem 1.4rem;
+  align-items: baseline;
+  padding: 1.3rem 0.4rem;
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.row > * { min-width: 0; }
+
+/* pointing at a link lays a torn red paper strip behind it, the same cut
+   paper as the homepage menu; text turns cream on the red. Each row gets
+   one of three tears so they don't look stamped. No motion. */
+a.row,
+.filters button,
+.page-top nav a {
+  position: relative;
+  isolation: isolate;
+}
+
+a.row::before,
+.filters button::before,
+.page-top nav a::before {
+  content: "";
+  position: absolute;
+  inset: 4px -8px;
+  background: var(--red);
+  clip-path: var(--tear);
+  z-index: -1;
+  visibility: hidden;
+}
+
+:root {
+  --tear-1: polygon(0 10%, 14% 0, 41% 7%, 69% 1%, 100% 8%, 99% 90%, 73% 100%, 44% 93%, 16% 100%, 1% 88%);
+  --tear-2: polygon(1% 4%, 22% 9%, 48% 0, 77% 6%, 99% 1%, 100% 94%, 80% 88%, 55% 100%, 27% 92%, 0 100%);
+  --tear-3: polygon(0 0, 31% 8%, 58% 2%, 86% 9%, 100% 3%, 98% 86%, 64% 100%, 38% 91%, 11% 98%, 2% 90%);
+}
+
+a.row, .filters button, .page-top nav a { --tear: var(--tear-1); }
+.rows li:nth-child(3n+2) a.row, .filters button:nth-child(2), .page-top nav li:nth-child(2) a { --tear: var(--tear-2); }
+.rows li:nth-child(3n) a.row, .filters button:nth-child(3), .page-top nav li:nth-child(3) a { --tear: var(--tear-3); }
+
+a.row:hover::before,
+a.row:focus-visible::before,
+.filters button:hover::before,
+.filters button:focus-visible::before,
+.page-top nav a:hover::before,
+.page-top nav a:focus-visible::before {
+  visibility: visible;
+}
+
+a.row:hover,
+a.row:focus-visible,
+.filters button:hover,
+.filters button:focus-visible,
+.page-top nav a:hover,
+.page-top nav a:focus-visible {
+  color: var(--bg);
+}
+
+/* on the red, every tag bar goes cream (the red professional bar would vanish) */
+a.row:hover .lab b,
+a.row:focus-visible .lab b { background: var(--bg); }
+
+/* keyboard focus also gets a ring, so it never relies on colour alone */
+a.row:focus-visible {
+  outline: 3px solid var(--fg);
+  outline-offset: 2px;
+}
+
+/* the short bar beside each row; red marks the accent kind (professional) */
+.lab {
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  line-height: 1.9;
+}
+
+.lab b {
+  display: block;
+  width: 3.2rem;
+  height: 8px;
+  margin-bottom: 0.5rem;
+  background: var(--fg);
+}
+
+.accent .lab b { background: var(--red); }
+
+.row .t {
+  display: block;
+  font-weight: 700;
+  font-size: clamp(1.2rem, 2.6vw, 1.9rem);
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.row .d {
+  display: block;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  margin-top: 0.4rem;
+  max-width: 62ch;
+}
+
+.src {
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-align: right;
+}
+
+/* ---------- footer: black on every page ---------- */
+.page-foot {
+  background: var(--ink);
+  color: var(--ink-soft);
+  border-top: 2px solid var(--fg);
+  text-align: center;
+  padding: 1.6rem 1rem 2rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.page-foot p { margin: 0; }
+
+@media (max-width: 700px) {
+  .page-top nav { display: none; }   /* the back link is enough on phones */
+  .row { grid-template-columns: minmax(0, 1fr); }
+  .src { text-align: left; }
+  .lab b {
+    display: inline-block;
+    vertical-align: middle;
+    width: 2rem;
+    margin: 0 0.6rem 0 0;
+  }
+}
+
+/* the torn strip replaces the button's square outline while it shows */
+.filters button:hover,
+.filters button:focus-visible { border-color: transparent; }

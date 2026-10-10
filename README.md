@@ -17,6 +17,10 @@ Four things in the drawing are clickable:
 | The TV over the bar | Projects |
 | The coupe on the bar | Say hello |
 
+The menu beside the picture (About, Projects, Writing, Say hello) opens the
+same panels, plus a Writing panel. Each menu word is set in hand-cut capitals:
+every letter carries a small `--r` rotation and `--y` offset in `index.html`.
+
 The clickable areas are the `.hotspot` groups at the end of the `<svg>` in
 `index.html`, drawn on top of the picture.
 

@@ -44,7 +44,7 @@
 
 body {
   margin: 0;
-  background: var(--ink);
+  background: var(--bg);
   color: var(--ink);
   font-family: var(--sans);
   font-weight: 400;
@@ -59,26 +59,91 @@ body {
   white-space: nowrap;
 }
 
-/* ---------- room ---------- */
-/* the picture runs edge to edge */
-.room-wrap {
-  margin: 0;
-  padding: 0;
+/* ---------- poster ----------
+   The page is the poster: open cream paper, the picture as a block set into it,
+   and the menu in big hand-cut capitals that break into the picture's floor. */
+.poster {
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+  align-items: center;
+  padding: clamp(28px, 6vh, 80px) clamp(20px, 6vw, 110px) clamp(20px, 4vh, 48px);
+  box-sizing: border-box;
 }
 
-/* Bass crops hard: the poster fills the screen edge to edge and the frame
-   cuts through the stools. The top of the crop is pinned so the sign stays. */
+.stage {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  width: 100%;
+  max-width: calc(76svh * 600 / 420);
+}
+
 .room {
   width: 100%;
-  height: 100vh;
-  height: 100svh;
+  height: auto;
   display: block;
-  background: var(--bg);
 }
 
-/* portrait phones and very wide screens show the whole picture instead */
-@media (max-aspect-ratio: 1/1), (min-aspect-ratio: 2/1) {
-  .room { height: auto; }
+.menu {
+  grid-column: 1;
+  grid-row: 1;
+  position: relative;
+  z-index: 2;
+  align-self: end;
+  display: grid;
+  justify-items: start;
+  gap: 0.1em;
+  margin-right: -14vw;           /* the words run into the picture */
+  padding-bottom: 20svh;          /* clear of the pool table */
+  font-size: clamp(30px, 4.6vw, 70px);
+}
+
+.menu-item {
+  font: inherit;
+  white-space: nowrap;
+  font-family: var(--sans);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  padding: 0.04em 0.12em;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s ease, transform 0.2s ease;
+}
+
+.menu-item .cut span {
+  display: inline-block;
+  transform: translateY(var(--y)) rotate(var(--r));
+}
+
+.menu-item .cut .sp { width: 0.28em; }
+
+/* a torn red strip slides in behind the word */
+.menu-item::before {
+  content: "";
+  position: absolute;
+  inset: 0.18em -0.08em 0.06em;
+  background: var(--red);
+  clip-path: polygon(0 12%, 18% 0, 47% 9%, 76% 2%, 100% 10%, 99% 88%, 70% 100%, 38% 91%, 12% 100%, 1% 86%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.22s ease;
+  z-index: -1;
+}
+
+.menu-item:hover,
+.menu-item:focus-visible {
+  color: var(--bg);
+  outline: none;
+}
+
+.menu-item:hover::before,
+.menu-item:focus-visible::before {
+  transform: scaleX(1);
 }
 
 .hotspot {
@@ -125,6 +190,26 @@ body {
 /* touch screens can't hover, so keep the tags visible there */
 @media (hover: none) {
   .hotspot .tag { opacity: 1; transform: none; }
+}
+
+/* phones: picture on top, menu below in two columns, no overlap */
+@media (max-width: 760px) {
+  .poster {
+    min-height: 0;
+    grid-template-columns: 1fr;
+    align-items: start;
+    align-content: start;
+    gap: 28px;
+    padding: 20px 16px 28px;
+  }
+  .stage, .menu { grid-column: 1; }
+  .stage { grid-row: 1; max-width: none; }
+  .menu {
+    grid-row: 2;
+    margin: 0;
+    padding: 0;
+    font-size: clamp(30px, 11vw, 52px);
+  }
 }
 
 /* ---------- the bar comes alive ----------
@@ -341,7 +426,7 @@ body.no-scroll {
   font-size: 0.72rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--bg);
+  color: var(--ink-soft);
 }
 
 .site-footer p {

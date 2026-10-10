@@ -105,6 +105,28 @@ body {
   margin-left: calc(var(--i) * 0.28em);   /* a gentle step down the floor, parallel to the stools */
 }
 
+/* Wide screens leave an empty strip left of the picture. There the menu moves
+   into that strip as a type column locked to the window: right-aligned to the
+   window's left edge, ABOUT level with its top, SAY HELLO with its bottom.
+   The floor is left as open cream. (100vw - 100cqw is the strip's width.) */
+@media (min-aspect-ratio: 17/10) and (min-width: 761px) {
+  .menu {
+    left: auto;
+    right: calc(97% + 2.2cqw);
+    top: calc((108 - 30) / 420 * 100%);
+    height: calc(158 / 420 * 100%);
+    font-size: clamp(20px, min(3.6cqw, (100vw - 100cqw + 3cqw) / 6.8), 52px);
+  }
+  .menu ul {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .menu li { margin-left: 0; }
+}
+
 /* big hand-cut capitals; a torn red strip slides in behind on hover/focus
    and the letters turn cream */
 .menu-item {

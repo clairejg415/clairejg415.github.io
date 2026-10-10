@@ -20,7 +20,9 @@ Four things in the drawing are clickable:
 The page is laid out as one poster built on the diagonal of the bar: the scene
 runs off the top and right edges, and the menu (About, Projects, Writing, Say
 hello) sits on the open floor as torn-paper tags stepping down parallel to the
-stools. On screens under 760px wide the menu moves below the picture so it
+stools. On wide screens (wider than 17:10) the menu instead moves into the
+empty strip left of the picture, right-aligned and locked to the window's top
+and bottom, leaving the floor open. On screens under 760px wide the menu moves below the picture so it
 stays readable.
 
 Accessibility: the menu is a list of real buttons (44px minimum height, cream

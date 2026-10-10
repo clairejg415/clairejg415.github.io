@@ -183,9 +183,6 @@ function buildScene(v){
       if(w)fig(()=>body(0,w[0],w[1]));
     });
     {const arm=S.find(o=>o.cls==='sip-arm');S[gi].style=`--dx:${(arm.target[0]-gb[0]).toFixed(1)}px;--dy:${(arm.target[1]-gb[1]+gh*.45).toFixed(1)}px`}
-    // foreground: pool table corner and its lamp, cropped by the frame
-    poly([[0,372],[172,450],[0,450]],'pool');poly([[0,394],[124,450],[0,450]],'felt');
-    poly([[0,0],[150,0],[176,58],[0,98]],'lamp');poly([[0,80],[168,42],[171,49],[0,87]],'lampStripe');poly([[0,98],[176,58],[179,65],[0,106]],'lampGlow');
   }
   if(v==='A'){drinks.martini(160);drinks.highball(292);drinks.wine(436);roundStool(200);roundStool(400)}
   else if(v==='C'){

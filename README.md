@@ -17,9 +17,18 @@ Four things in the drawing are clickable:
 | The TV over the bar | Projects |
 | The coupe on the bar | Say hello |
 
-The menu beside the picture (About, Projects, Writing, Say hello) opens the
-same panels, plus a Writing panel. Each menu word is set in hand-cut capitals:
-every letter carries a small `--r` rotation and `--y` offset in `index.html`.
+The page is laid out as one poster built on the diagonal of the bar: the scene
+runs off the top and right edges, and the menu (About, Projects, Writing, Say
+hello) sits on the open floor as torn-paper tags stepping down parallel to the
+stools. On screens under 760px wide the menu moves below the picture so it
+stays readable.
+
+Accessibility: the menu is a list of real buttons (44px minimum height, cream
+on black, visible focus ring). Panels are modal dialogs: focus moves into the
+panel, the rest of the page is made inert, Escape closes, and focus returns to
+the menu. The picture's own hotspots that repeat menu items are mouse-only;
+the bottles stay keyboard-reachable because Things I'm into lives only there.
+All animation stops under prefers-reduced-motion.
 
 The clickable areas are the `.hotspot` groups at the end of the `<svg>` in
 `index.html`, drawn on top of the picture.

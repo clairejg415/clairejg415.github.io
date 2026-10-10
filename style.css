@@ -60,23 +60,21 @@ body {
 }
 
 /* ---------- poster ----------
-   The page is the poster: open cream paper, the picture as a block set into it,
-   and the menu in big hand-cut capitals that break into the picture's floor. */
+   One poster, built on the diagonal of the bar. The scene has no frame: it runs
+   off the top and right of the screen, and its cream floor is the page itself.
+   The open floor at bottom-left is the quiet part of the poster, and the menu
+   sits there as torn-paper tags stepping down parallel to the stools. The sign
+   on the canopy stays the loudest type. */
 .poster {
   min-height: 100svh;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
-  align-items: center;
-  padding: clamp(28px, 6vh, 80px) clamp(20px, 6vw, 110px) clamp(20px, 4vh, 48px);
-  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .stage {
-  grid-column: 2;
-  grid-row: 1;
-  justify-self: end;
-  width: 100%;
-  max-width: calc(76svh * 600 / 420);
+  position: relative;
+  margin-left: auto;              /* pinned to the right edge */
+  width: min(100vw, 100svh * 600 / 420);
+  container-type: inline-size;
 }
 
 .room {
@@ -85,34 +83,45 @@ body {
   display: block;
 }
 
+/* positions are in the scene's own units (600 x 420 from y=30), so the
+   menu stays on the same patch of floor at any size */
 .menu {
-  grid-column: 1;
-  grid-row: 1;
-  position: relative;
-  z-index: 2;
-  align-self: end;
+  position: absolute;
+  left: calc(26 / 600 * 100%);
+  top: calc((296 - 30) / 420 * 100%);
+  font-size: clamp(16px, 2.05cqw, 30px);
+}
+
+.menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
+  gap: 0.32em;
   justify-items: start;
-  gap: 0.1em;
-  margin-right: -14vw;           /* the words run into the picture */
-  padding-bottom: 20svh;          /* clear of the pool table */
-  font-size: clamp(30px, 4.6vw, 70px);
+}
+
+.menu li {
+  margin-left: calc(var(--i) * 2.6em);   /* each tag a step further down the floor */
 }
 
 .menu-item {
   font: inherit;
-  white-space: nowrap;
   font-family: var(--sans);
   font-weight: 700;
-  line-height: 0.95;
-  letter-spacing: 0.01em;
-  color: var(--ink);
-  background: none;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--bg);
+  background: var(--ink);
   border: 0;
-  padding: 0.04em 0.12em;
+  min-height: 44px;
+  padding: 0.5em 0.85em 0.45em;
   cursor: pointer;
-  position: relative;
-  transition: color 0.15s ease, transform 0.2s ease;
+  /* torn paper edge */
+  clip-path: polygon(0 6%, 9% 0, 31% 5%, 58% 0, 83% 4%, 100% 0, 98% 52%, 100% 96%, 74% 100%, 46% 94%, 19% 100%, 2% 95%, 0 48%);
+  transform: rotate(-2.5deg);
+  transition: background-color 0.15s ease, transform 0.2s ease;
 }
 
 .menu-item .cut span {
@@ -120,31 +129,21 @@ body {
   transform: translateY(var(--y)) rotate(var(--r));
 }
 
-.menu-item .cut .sp { width: 0.28em; }
-
-/* a torn red strip slides in behind the word */
-.menu-item::before {
-  content: "";
-  position: absolute;
-  inset: 0.18em -0.08em 0.06em;
-  background: var(--red);
-  clip-path: polygon(0 12%, 18% 0, 47% 9%, 76% 2%, 100% 10%, 99% 88%, 70% 100%, 38% 91%, 12% 100%, 1% 86%);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.22s ease;
-  z-index: -1;
-}
+.menu-item .cut .sp { width: 0.3em; }
 
 .menu-item:hover,
 .menu-item:focus-visible {
-  color: var(--bg);
-  outline: none;
+  background: var(--red);
+  transform: rotate(-2.5deg) translateX(0.3em);
 }
 
-.menu-item:hover::before,
-.menu-item:focus-visible::before {
-  transform: scaleX(1);
+/* clip-path hides an outline, so focus is marked on the list item instead */
+.menu li:has(.menu-item:focus-visible) {
+  outline: 3px solid var(--ink);
+  outline-offset: 4px;
 }
+
+.menu-item:focus { outline: none; }
 
 .hotspot {
   cursor: pointer;
@@ -187,29 +186,23 @@ body {
   transform: none;
 }
 
-/* touch screens can't hover, so keep the tags visible there */
+/* touch screens can't hover; the menu covers the other panels, so only the
+   bottles (reachable nowhere else) keep a visible label there */
 @media (hover: none) {
-  .hotspot .tag { opacity: 1; transform: none; }
+  .hotspot[data-panel="interests"] .tag { opacity: 1; transform: none; }
 }
 
-/* phones: picture on top, menu below in two columns, no overlap */
+/* phones and narrow windows: the floor is too small to hold readable tags,
+   so the menu steps down beneath the picture instead */
 @media (max-width: 760px) {
-  .poster {
-    min-height: 0;
-    grid-template-columns: 1fr;
-    align-items: start;
-    align-content: start;
-    gap: 28px;
-    padding: 20px 16px 28px;
-  }
-  .stage, .menu { grid-column: 1; }
-  .stage { grid-row: 1; max-width: none; }
+  .poster { min-height: 0; padding-bottom: 24px; }
+  .stage { width: 100vw; }
   .menu {
-    grid-row: 2;
-    margin: 0;
-    padding: 0;
-    font-size: clamp(30px, 11vw, 52px);
+    position: static;
+    font-size: clamp(18px, 5.4vw, 24px);
+    padding: 8px 16px 0;
   }
+  .menu li { margin-left: calc(var(--i) * 1.4em); }
 }
 
 /* ---------- the bar comes alive ----------

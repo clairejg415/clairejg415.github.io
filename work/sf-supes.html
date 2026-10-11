@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SF Supes, Decoded — Claire Jacobs</title>
+<meta name="description" content="Decode SF Supes Meetings, a tool Claire Jacobs Gáez built that turns San Francisco Board of Supervisors meetings into plain-English summaries and voting records.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%B8%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../style.css?v=8">
+<link rel="stylesheet" href="../page.css?v=18">
+</head>
+<body class="inner theme-dark">
+
+<header class="page-top">
+  <div class="page-top-inner">
+    <a href="../">← Back to the bar</a>
+    <nav aria-label="Main"><ul><li><a href="../about.html">About</a></li><li><a href="../work.html" aria-current="page">Work</a></li><li><a href="../writing.html">Writing</a></li><li><a href="../contact.html">Say hello</a></li></ul></nav>
+  </div>
+</header>
+
+<main class="page">
+  <div class="page-head">
+    <p class="crumb"><a href="../work.html">← Work</a></p>
+    <h1 class="page-title">SF SUPES</h1>
+    <div class="rule"></div><div class="rule short"></div>
+    <p class="page-dek">What City Hall decided this week, and how your supervisor voted.</p>
+  </div>
+
+  <h2 class="section-label"><b></b>Why I built it</h2>
+  <div class="prose">
+    <p>San Francisco’s Board of Supervisors meets most Tuesdays and votes on everything from affordable housing bonds to cannabis cafés to who gets a landmark plaque. All of it is public, but it lives in long, procedural minutes that almost nobody reads. If you want to know how the city is handling the things you care about, or how the person representing your district actually votes, you have to dig.</p>
+    <p>Decode SF Supes Meetings does the digging. It reads each meeting’s official minutes, summarizes them in plain English, and sorts them by theme, so constituents can see at a glance how pressing issues are being handled and where their supervisor stands.</p>
+  </div>
+
+  <figure class="photo wide tilt-right">
+    <img src="../img/sfbos-meeting.jpg" width="1512" height="806" loading="lazy"
+         alt="A meeting digest for September 15, 2026: a plain-English summary, top action items with roll-call votes, and a split vote on street tree standards flagged in red">
+    <figcaption>One meeting, decoded: the summary, the top action items, and the split vote.</figcaption>
+  </figure>
+
+  <h2 class="section-label"><b></b>What it does</h2>
+  <dl class="credits">
+    <div><dt>Meeting digests</dt><dd>Every regular meeting gets a short summary, a theme, and its top action items by file number, with who voted aye and no.</dd></div>
+    <div><dt>Split votes, flagged</dt><dd>Most items pass 11 to 0. The ones that don’t are pulled out as disputed issues, because that’s where the board actually disagrees.</dd></div>
+    <div><dt>Supervisor records</dt><dd>A card for each of the eleven supervisors: district, time in office, ayes, noes, absences, and how much legislation they’ve introduced.</dd></div>
+  </dl>
+
+  <figure class="photo wide tilt-left">
+    <img src="../img/sfbos-supervisors.jpg" width="1512" height="806" loading="lazy"
+         alt="Supervisor voting record cards showing each supervisor’s district, start date, and counts of aye votes, no votes, absences, and legislation introduced">
+    <figcaption>Every supervisor’s voting record for the year.</figcaption>
+  </figure>
+
+  <h2 class="section-label"><b></b>Try it</h2>
+  <ul class="rows">
+    <li>
+      <a class="row" href="https://sfbos-digest.replit.app/" target="_blank" rel="noopener">
+        <span class="lab"><b></b>Live</span>
+        <span class="main">
+          <span class="t">sfbos-digest.replit.app</span>
+          <span class="d">Browse recent meetings or look up your supervisor’s voting record.</span>
+        </span>
+        <span class="src">Visit ↗<span class="visually-hidden"> (opens in a new tab)</span></span>
+      </a>
+    </li>
+  </ul>
+</main>
+
+<footer class="page-foot">
+  <p>© 2026 Claire Jacobs</p>
+</footer>
+
+<script src="../page.js?v=3"></script>
+</body>
+</html>
